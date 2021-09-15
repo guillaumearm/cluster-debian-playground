@@ -1,0 +1,54 @@
+- name: Install docker-ce apt repository
+  become: true
+  hosts: docker
+  tasks:
+    - name: Preliminary packages installation
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - gnupg
+          - lsb-release
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+    - name: Add official docker GPG apt key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+    - name: Add docker repository to apt
+      ansible.builtin.apt_repository:
+        repo: deb https://download.docker.com/linux/debian bullseye stable
+        state: present
+
+- name: Install docker-ce
+  become: true
+  hosts: docker
+  gather_facts: false
+  serial: 1
+  tasks:
+    - name: Install docker dependencies
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+- name: Docker postinstall
+  become: true
+  hosts: docker
+  tasks:
+    - name: Enable docker service
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true
+    - name: Add docker group to osboxer user
+      ansible.builtin.user:
+        name: osboxes
+        group: osboxes
+        groups: docker
+        append: true

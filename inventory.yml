@@ -1,0 +1,6 @@
+all:
+  children:
+    docker:
+      hosts:
+        192.168.1.222: # test-machine
+        192.168.1.223: # test-machine2
