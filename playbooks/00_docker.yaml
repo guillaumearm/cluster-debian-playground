@@ -46,9 +46,9 @@
         name: docker
         state: started
         enabled: true
-    - name: Add docker group to osboxer user
+    - name: Add docker group to given main_user
       ansible.builtin.user:
-        name: osboxes
-        group: osboxes
+        name: '{{ ansible_user }}'
+        group: '{{ ansible_user }}'
         groups: docker
         append: true
