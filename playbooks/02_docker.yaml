@@ -43,7 +43,12 @@
   become: true
   hosts: all
   tasks:
-    - name: Enable docker service
+    - name: Ensure containerd service is started and enabled
+      ansible.builtin.systemd:
+        name: containerd
+        state: started
+        enabled: true
+    - name: Ensure docker service is started and enabled
       ansible.builtin.systemd:
         name: docker
         state: started
@@ -68,8 +73,3 @@
       ansible.builtin.pip:
         name:
           - docker
-          - wait-for-docker
-    - name: Wait for docker daemon to be ready
-      changed_when: false
-      ansible.builtin.command:
-        cmd: wait-for-docker
