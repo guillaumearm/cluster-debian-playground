@@ -1,4 +1,6 @@
 all:
+  vars:
+    apt_cache_server: 192.168.1.211
   children:
     master: # kubernetes master
       hosts:
@@ -9,6 +11,8 @@ all:
     cacheservers: # apt-cache-ng mirroring
       hosts:
         192.168.1.211:
+      vars:
+        apt_cache_server: 127.0.0.1
     docker:
       children:
         master:

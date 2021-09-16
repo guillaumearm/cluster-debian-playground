@@ -1,5 +1,32 @@
-- name: Setup cache servers
+- name: setup cache servers
+  become: true
   hosts: cacheservers
+  handlers:
+    - name: Reboot apt-cacher-ng service
+      ansible.builtin.systemd:
+        name: apt-cacher-ng
+        enabled: true
+        state: restarted
   tasks:
-    - name: test task
-      ping:
+    - name: Install apt-cacher-ng
+      ansible.builtin.apt:
+        name: apt-cacher-ng
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+    - name: Setup TLS configuration for clients
+      notify: Reboot apt-cacher-ng service
+      ansible.builtin.template:
+        src: templates/mirrors/acng.conf.j2
+        dest: /etc/apt-cacher-ng/acng.conf
+        mode: '0644'
+
+- name: Configure proxy on clients
+  become: true
+  hosts: all
+  tasks:
+    - name: Add apt configuration file with http proxy
+      ansible.builtin.copy:
+        content: 'Acquire::http::Proxy "http://{{ apt_cache_server }}:3142";'
+        dest: '/etc/apt/apt.conf.d/00aptproxy'
+        mode: '0644'
