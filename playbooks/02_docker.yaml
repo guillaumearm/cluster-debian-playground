@@ -1,4 +1,5 @@
 - name: Install docker-ce apt repository
+  gather_facts: false
   become: true
   hosts: docker
   tasks:
@@ -22,9 +23,9 @@
         state: present
 
 - name: Install docker-ce
+  gather_facts: false
   become: true
   hosts: docker
-  gather_facts: false
   serial: 1
   tasks:
     - name: Install docker dependencies
@@ -38,6 +39,7 @@
         cache_valid_time: 3600
 
 - name: Docker postinstall
+  gather_facts: false
   become: true
   hosts: docker
   tasks:

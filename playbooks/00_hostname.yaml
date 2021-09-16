@@ -1,4 +1,5 @@
 - name: Setup hostnames on all machines
+  gather_facts: false
   become: true
   hosts: all
   tasks:

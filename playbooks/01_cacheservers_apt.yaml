@@ -1,4 +1,5 @@
 - name: Setup apt cache on cache servers
+  gather_facts: false
   become: true
   hosts: cacheservers
   handlers:
@@ -22,6 +23,7 @@
         mode: '0644'
 
 - name: Configure apt cache proxy on clients
+  gather_facts: false
   become: true
   hosts: all
   tasks:
