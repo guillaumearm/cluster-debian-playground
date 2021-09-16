@@ -40,7 +40,21 @@ SupportDir: /usr/lib/apt-cacher-ng
 # Can be set to 9999 to emulate apt-proxy. Value of 0 turns off TCP server
 # (SocketPath must be set in this case).
 #
+
 Port:{{ apt_cache_port }}
+
+# Allow data pass-through mode for certain hosts when requested by the client
+# using a CONNECT request. This is particularly useful to allow access to SSL
+# sites (https proxying). The string is a regular expression which should cover
+# the server name with port and must be correctly formated and terminated.
+# Examples:
+# PassThroughPattern: private-ppa\.launchpad\.net:443$
+
+#
+# Default: ^(bugs\.debian\.org|changelogs\.ubuntu\.com):443$
+# PassThroughPattern: ^(bugs\.debian\.org|changelogs\.ubuntu\.com):443$
+
+PassThroughPattern: .* # this would allow CONNECT to everything
 
 # Addresses or hostnames to listen on. Multiple addresses must be separated by
 # spaces. Each entry must be an exact local address which is associated with a
@@ -434,17 +448,6 @@ LocalDirs: acng-doc /usr/share/doc/apt-cacher-ng
 # a negative value removes even If-Modified-Since headers.
 #
 # VfileUseRangeOps: 1
-
-# Allow data pass-through mode for certain hosts when requested by the client
-# using a CONNECT request. This is particularly useful to allow access to SSL
-# sites (https proxying). The string is a regular expression which should cover
-# the server name with port and must be correctly formated and terminated.
-# Examples:
-# PassThroughPattern: private-ppa\.launchpad\.net:443$
-PassThroughPattern: .* # this would allow CONNECT to everything
-#
-# Default: ^(bugs\.debian\.org|changelogs\.ubuntu\.com):443$
-# PassThroughPattern: ^(bugs\.debian\.org|changelogs\.ubuntu\.com):443$
 
 # It's possible that an evil client requests a volatile file but does not
 # retrieve the response and keeps the connection effectively stuck over

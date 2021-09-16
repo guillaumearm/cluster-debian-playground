@@ -14,10 +14,10 @@
         state: present
         update_cache: true
         cache_valid_time: 3600
-    - name: Setup TLS configuration for clients
+    - name: Setup apt-cacher-ng configuration
       notify: Reboot apt-cacher-ng service
       ansible.builtin.template:
-        src: templates/cacheservers/acng.conf.j2
+        src: templates/cacheservers/apt-cache-ng.conf.j2
         dest: /etc/apt-cacher-ng/acng.conf
         mode: '0644'
 
