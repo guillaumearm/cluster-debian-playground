@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ansible-inventory --graph && echo playbooks/*.yaml | xargs -n 1 ansible-playbook --syntax-check
