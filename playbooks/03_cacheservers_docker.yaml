@@ -32,6 +32,14 @@
   vars:
     registry_volume_path: '/mnt/registry'
   tasks:
+    - name: Wait for docker daemon to be ready
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+    - name: Sleep for 5 seconds (workaround, docker run after restart)
+      delegate_to: localhost
+      wait_for:
+        timeout: 5
     - name: Start registry container
       ansible.builtin.docker_container:
         container_default_behavior: no_defaults
