@@ -1,4 +1,4 @@
-- name: Configure insecure-registries on clients
+- name: Configure insecure-registries on all docker machines
   become: true
   hosts: docker
   handlers:
@@ -7,7 +7,7 @@
         name: docker
         state: restarted
   tasks:
-    - name: Modify daemon.json file
+    - name: Modify docker daemon.json file
       notify: Restart docker daemon
       ansible.builtin.copy:
         content: |
@@ -25,7 +25,7 @@
         dest: /etc/hosts
         mode: '0644'
 
-- name: setup cache server (docker)
+- name: setup docker registry on cache servers
   hosts: cacheservers
   vars:
     registry_volume_path: '/mnt/registry'

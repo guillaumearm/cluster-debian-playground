@@ -1,0 +1,21 @@
+#!/bin/bash
+
+## Tells  Proxy-Auto-Config if a specified proxy is reachable or if
+## it should just fallback to a direct connection.
+##
+## This file should be executable and referenced by its full path
+## in the /etc/apt/apt.conf.d/02proxy file we create too.
+
+ip="{{ apt_cache_server }}"
+port={{ apt_cache_port }}
+
+## This will install netcat automatically if it's missing if uncommented
+#if [[ $(which nc >/dev/null; echo $?) -ne 0 ]]; then
+#	apt install -y netcat
+#fi
+
+if [[ $(nc -w1 -z $ip $port &>/dev/null; echo $?) -eq 0 ]]; then
+    echo -n "http://${ip}:${port}/"
+else 
+    echo -n "DIRECT"
+fi

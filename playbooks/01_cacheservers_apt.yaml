@@ -1,4 +1,4 @@
-- name: setup cache server (apt)
+- name: Setup apt cache on cache servers
   become: true
   hosts: cacheservers
   handlers:
@@ -21,12 +21,21 @@
         dest: /etc/apt-cacher-ng/acng.conf
         mode: '0644'
 
-- name: Configure proxy on clients
+- name: Configure apt cache proxy on clients
   become: true
   hosts: all
   tasks:
+    - name: Install apt-proxy-detect.sh script
+      ansible.builtin.template:
+        src: templates/all/apt-proxy-detect.sh.j2
+        dest: /usr/bin/apt-proxy-detect.sh
+        mode: '0755'
+
     - name: Add apt configuration file with http proxy
       ansible.builtin.copy:
-        content: 'Acquire::http::Proxy "http://{{ apt_cache_server }}:{{ apt_cache_port }}";'
-        dest: '/etc/apt/apt.conf.d/00aptproxy'
+        content: |
+          ## /etc/apt/apt.conf.d/02proxy
+          Acquire::Retries 0;
+          Acquire::http::Proxy-Auto-Detect "/usr/bin/apt-proxy-detect.sh";
+        dest: /etc/apt/apt.conf.d/02proxy
         mode: '0644'
