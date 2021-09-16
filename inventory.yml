@@ -1,19 +1,30 @@
 all:
   vars:
-    apt_cache_server: 192.168.1.211
+    cache_server_ip: 192.168.1.211
+    apt_cache_server: "{{ cache_server_ip }}"
+    apt_cache_port: 3142
+    docker_registry_server: "{{ cache_server_ip }}"
+    docker_registry_hostname: cache
+    docker_registry_port: 4242
   children:
     master: # kubernetes master
       hosts:
     workers: # kubernetes nodes
       hosts:
-        192.168.1.222: # test-machine
-        192.168.1.223: # test-machine2
-    cacheservers: # apt-cache-ng mirroring
+        192.168.1.222:
+          hostname: test-machine
+        192.168.1.223:
+          hostname: test-machine2
+    cacheservers: # apt-cache + docker registry
       hosts:
         192.168.1.211:
+          hostname: cache
       vars:
         apt_cache_server: 127.0.0.1
+        docker_registry_server: 127.0.0.1
     docker:
       children:
         master:
         workers:
+        cacheservers:
+

@@ -1,4 +1,4 @@
-- name: setup cache servers
+- name: setup cache server (apt)
   become: true
   hosts: cacheservers
   handlers:
@@ -17,7 +17,7 @@
     - name: Setup TLS configuration for clients
       notify: Reboot apt-cacher-ng service
       ansible.builtin.template:
-        src: templates/mirrors/acng.conf.j2
+        src: templates/cacheservers/acng.conf.j2
         dest: /etc/apt-cacher-ng/acng.conf
         mode: '0644'
 
@@ -27,6 +27,6 @@
   tasks:
     - name: Add apt configuration file with http proxy
       ansible.builtin.copy:
-        content: 'Acquire::http::Proxy "http://{{ apt_cache_server }}:3142";'
+        content: 'Acquire::http::Proxy "http://{{ apt_cache_server }}:{{ apt_cache_port }}";'
         dest: '/etc/apt/apt.conf.d/00aptproxy'
         mode: '0644'

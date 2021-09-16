@@ -1,0 +1,43 @@
+- name: Configure insecure-registries on clients
+  become: true
+  hosts: docker
+  handlers:
+    - name: Restart docker daemon
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+  tasks:
+    - name: Modify daemon.json file
+      notify: Restart docker daemon
+      ansible.builtin.copy:
+        content: |
+          {
+            "insecure-registries":[
+              "{{ docker_registry_server }}:{{ docker_registry_port }}",
+              "{{ docker_registry_hostname }}:{{ docker_registry_port }}"
+            ]
+          }
+        dest: '/etc/docker/daemon.json'
+        mode: '0600'
+    - name: Setup /etc/hosts file with registry hostname
+      ansible.builtin.template:
+        src: templates/docker/hosts.j2
+        dest: /etc/hosts
+        mode: '0644'
+
+- name: setup cache server (docker)
+  hosts: cacheservers
+  vars:
+    registry_volume_path: '/mnt/registry'
+  tasks:
+    - name: Start registry container
+      ansible.builtin.docker_container:
+        container_default_behavior: no_defaults
+        name: registry
+        image: registry:2
+        state: started
+        restart_policy: always
+        volumes:
+          - '{{ registry_volume_path }}:/var/lib/registry'
+        ports:
+          - '{{ docker_registry_port }}:5000'

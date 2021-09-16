@@ -40,7 +40,7 @@ SupportDir: /usr/lib/apt-cacher-ng
 # Can be set to 9999 to emulate apt-proxy. Value of 0 turns off TCP server
 # (SocketPath must be set in this case).
 #
-# Port:3142
+Port:{{ apt_cache_port }}
 
 # Addresses or hostnames to listen on. Multiple addresses must be separated by
 # spaces. Each entry must be an exact local address which is associated with a
