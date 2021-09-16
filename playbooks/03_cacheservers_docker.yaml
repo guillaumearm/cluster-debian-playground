@@ -26,7 +26,7 @@
         dest: /etc/hosts
         mode: '0644'
 
-- name: setup docker registry on cache servers
+- name: Setup private docker registry on cache servers
   gather_facts: false
   hosts: cacheservers
   vars:

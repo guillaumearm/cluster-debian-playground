@@ -65,5 +65,11 @@
         update_cache: true
         cache_valid_time: 3600
     - name: Install docker python package
-      pip:
-        name: docker
+      ansible.builtin.pip:
+        name:
+          - docker
+          - wait-for-docker
+    - name: Wait for docker daemon to be ready
+      changed_when: false
+      ansible.builtin.command:
+        cmd: wait-for-docker
