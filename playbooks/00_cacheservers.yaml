@@ -1,0 +1,5 @@
+- name: Setup cache servers
+  hosts: cacheservers
+  tasks:
+    - name: test task
+      ping:
