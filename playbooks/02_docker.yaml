@@ -1,7 +1,7 @@
-- name: Install docker-ce apt repository
+- name: Setup docker-ce apt repository
   gather_facts: false
   become: true
-  hosts: docker
+  hosts: all
   tasks:
     - name: Preliminary packages installation
       ansible.builtin.apt:
@@ -25,7 +25,7 @@
 - name: Install docker-ce
   gather_facts: false
   become: true
-  hosts: docker
+  hosts: all
   serial: 1
   tasks:
     - name: Install docker dependencies
@@ -41,7 +41,7 @@
 - name: Docker postinstall
   gather_facts: false
   become: true
-  hosts: docker
+  hosts: all
   tasks:
     - name: Enable docker service
       ansible.builtin.systemd:

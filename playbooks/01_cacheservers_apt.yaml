@@ -22,7 +22,7 @@
         dest: /etc/apt-cacher-ng/acng.conf
         mode: '0644'
 
-- name: Configure apt cache proxy on clients
+- name: Configure apt cache proxy on all clients
   gather_facts: false
   become: true
   hosts: all
