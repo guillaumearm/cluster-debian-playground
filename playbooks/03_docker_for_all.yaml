@@ -1,5 +1,4 @@
 ### Docker full installation ###
-# TODO: include_playbook ? role ?
 
 - name: Docker Installation (cluster)
   gather_facts: false

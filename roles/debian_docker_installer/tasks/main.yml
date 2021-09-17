@@ -28,7 +28,6 @@
       - containerd.io
     state: present
     update_cache: true
-    # TODO: register a value to know if it's 0 or 3600
     cache_valid_time: '{{ 0 if __docker_apt_list_copy.changed else 3600 }}'
 - name: Ensure containerd service is started and enabled
   ansible.builtin.systemd:

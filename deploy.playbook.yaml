@@ -2,3 +2,4 @@
 - import_playbook: playbooks/01_cache_apt.yaml
 - import_playbook: playbooks/02_docker_for_cacheserver.yaml
 - import_playbook: playbooks/03_docker_for_all.yaml
+- import_playbook: playbooks/04_kubernetes.yaml

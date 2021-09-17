@@ -1,5 +1,4 @@
 ### Docker full installation for cacheserver ###
-# TODO: include_playbook ? role ?
 
 - name: Docker Installation (cacheserver)
   gather_facts: false

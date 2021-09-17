@@ -1,0 +1,58 @@
+- name: PreInstall kubernetes
+  gather_facts: false
+  become: true
+  hosts: cluster
+  handlers:
+    - name: Reload all sysctl configs
+      ansible.builtin.command:
+        cmd: sysctl --system
+  tasks:
+    - name: Enable br_netfilter kernel module
+      notify: Reload all sysctl configs
+      ansible.builtin.copy:
+        content: |
+          br_netfilter
+        dest: /etc/modules-load.d/k8s.conf
+        mode: '0644'
+    - name: Enable bridged traffic (iptables)
+      notify: Reload all sysctl configs
+      ansible.builtin.copy:
+        content: |
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.bridge.bridge-nf-call-iptables = 1
+        dest: /etc/sysctl.d/k8s.conf
+        mode: '0644'
+
+- name: Install kubernetes packages
+  gather_facts: false
+  become: true
+  hosts: cluster
+  tasks:
+    - name: Preliminary packages installation
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+    - name: Add official google cloud GPG apt key
+      ansible.builtin.apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+    - name: Add docker repository (http) to apt sources
+      register: __k8s_apt_list_copy
+      ansible.builtin.copy:
+        mode: '0666'
+        dest: /etc/apt/sources.list.d/packages_cloud_google_com.list
+        content: |
+          deb http://apt.kubernetes.io/ kubernetes-xenial main
+    - name: Install kubernetes packages (kubelet/kubeadm/kubectl)
+      ansible.builtin.apt:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+        update_cache: true
+        cache_valid_time: '{{ 0 if __k8s_apt_list_copy.changed else 3600 }}'
