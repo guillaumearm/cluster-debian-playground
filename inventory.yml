@@ -1,23 +1,30 @@
 all:
   vars:
-    cache_server_ip: 192.168.1.200
+    cache_server_ip: 192.168.1.210
     apt_cache_server: "{{ cache_server_ip }}"
     apt_cache_port: 3142
     docker_registry_server: "{{ cache_server_ip }}"
-    docker_registry_hostname: cache
+    docker_registry_hostname: cache # hostname used by clients
     docker_registry_port: 4242
   children:
-    master: # kubernetes master
+    controller: # kubernetes controller
       hosts:
-        192.168.1.200:
-          hostname: kube-controller
-    workers: # kubernetes nodes
+        # 192.168.1.200:
+        #   hostname: kube-control
+    nodes: # kubernetes nodes
       hosts:
-        192.168.1.201:
-          hostname: kube-node1
-    cacheservers: # apt-cache + docker registry
+        # 192.168.1.201:
+        #   hostname: kube-node1
+        # 192.168.1.202:
+        #   hostname: kube-node2
+        # 192.168.1.203:
+        #   hostname: kube-node3
+        # 192.168.1.204:
+        #   hostname: kube-node4
+    cacheserver: # apt-cache + docker registry
       hosts:
-        192.168.1.200:
+        192.168.1.210:
+          hostname: cache-server
       vars:
         apt_cache_server: 127.0.0.1
         docker_registry_server: 127.0.0.1

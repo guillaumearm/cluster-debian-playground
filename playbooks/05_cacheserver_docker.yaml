@@ -28,7 +28,7 @@
 
 - name: Setup private docker registry on cache servers
   gather_facts: false
-  hosts: cacheservers
+  hosts: cacheserver
   vars:
     registry_volume_path: '/mnt/registry'
   tasks:
@@ -36,10 +36,6 @@
       ansible.builtin.systemd:
         name: docker
         state: started
-    - name: Sleep for 5 seconds (workaround, docker run after restart)
-      delegate_to: localhost
-      wait_for:
-        timeout: 5
     - name: Start registry container
       ansible.builtin.docker_container:
         container_default_behavior: no_defaults
