@@ -1,0 +1,6 @@
+---
+# handlers file for debian_docker_installer
+
+- name: Reboot machine
+  become: true
+  ansible.builtin.reboot:
