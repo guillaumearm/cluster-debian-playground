@@ -7,10 +7,14 @@ all:
     docker_registry_hostname: cache # hostname used by clients
     docker_registry_port: 4242
   children:
+    cluster:
+      children:
+        controller:
+        nodes:
     controller: # kubernetes controller
       hosts:
-        # 192.168.1.200:
-        #   hostname: kube-control
+        192.168.1.200:
+          hostname: kube-control
     nodes: # kubernetes nodes
       hosts:
         # 192.168.1.201:
