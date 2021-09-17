@@ -17,14 +17,14 @@ all:
           hostname: kube-control
     nodes: # kubernetes nodes
       hosts:
-        # 192.168.1.201:
-        #   hostname: kube-node1
-        # 192.168.1.202:
-        #   hostname: kube-node2
-        # 192.168.1.203:
-        #   hostname: kube-node3
-        # 192.168.1.204:
-        #   hostname: kube-node4
+        192.168.1.201:
+          hostname: kube-node1
+        192.168.1.202:
+          hostname: kube-node2
+        192.168.1.203:
+          hostname: kube-node3
+        192.168.1.204:
+          hostname: kube-node4
     cacheserver: # apt-cache + docker registry
       hosts:
         192.168.1.210:

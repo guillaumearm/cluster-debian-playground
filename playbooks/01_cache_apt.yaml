@@ -37,7 +37,7 @@
       ansible.builtin.copy:
         content: |
           ## /etc/apt/apt.conf.d/02proxy
-          Acquire::Retries 0;
+          # Acquire::Retries 0;
           Acquire::http::Proxy-Auto-Detect "/usr/bin/apt-proxy-detect.sh";
         dest: /etc/apt/apt.conf.d/02proxy
         mode: '0644'
