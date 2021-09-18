@@ -85,4 +85,7 @@
     - name: Setup kubectl completion
       ansible.builtin.lineinfile:
         path: '/home/{{ ansible_user }}/.bashrc'
-        line: source <(kubectl completion bash)
+        line: '{{ item }}'
+      loop:
+        - source <(kubectl completion bash)
+        - source <(kubeadm completion bash)
