@@ -30,3 +30,4 @@ all:
       vars:
         apt_cache_server: 127.0.0.1
         docker_registry_server: 127.0.0.1
+# kubeadm join 192.168.1.200:6443 --token vwrubo.0cy0avds0k51e8jn --discovery-token-ca-cert-hash sha256:1d7eb87ce8ac37e91da4a7aa26011fbed73f7e38a55742d6d8659a910ea3157b

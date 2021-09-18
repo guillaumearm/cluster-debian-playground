@@ -8,20 +8,20 @@
         cmd: sysctl --system
   tasks:
     - name: Enable br_netfilter kernel module
-      notify: Reload all sysctl configs
       ansible.builtin.copy:
         content: |
           br_netfilter
         dest: /etc/modules-load.d/k8s.conf
         mode: '0644'
-    - name: Enable bridged traffic (iptables)
       notify: Reload all sysctl configs
+    - name: Enable bridged traffic (iptables)
       ansible.builtin.copy:
         content: |
           net.bridge.bridge-nf-call-ip6tables = 1
           net.bridge.bridge-nf-call-iptables = 1
         dest: /etc/sysctl.d/k8s.conf
         mode: '0644'
+      notify: Reload all sysctl configs
 
 - name: Install kubernetes packages
   gather_facts: false
@@ -40,13 +40,13 @@
       ansible.builtin.apt_key:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
-    - name: Add docker repository (http) to apt sources
-      register: __k8s_apt_list_copy
+    - name: Add kubernetes repository (http) to apt sources
       ansible.builtin.copy:
-        mode: '0666'
-        dest: /etc/apt/sources.list.d/packages_cloud_google_com.list
         content: |
           deb http://apt.kubernetes.io/ kubernetes-xenial main
+        dest: /etc/apt/sources.list.d/packages_cloud_google_com.list
+        mode: '0666'
+      register: __k8s_apt_list_copy
     - name: Install kubernetes packages (kubelet/kubeadm/kubectl)
       ansible.builtin.apt:
         name:
@@ -68,3 +68,21 @@
       ansible.builtin.dpkg_selections:
         name: kubectl
         selection: hold
+
+- name: PostInstall kubernetes
+  gather_facts: false
+  hosts: cluster
+  tasks:
+    - name: Set aliases kubernetes for bash
+      ansible.builtin.lineinfile:
+        path: '/home/{{ ansible_user }}/.bash_aliases'
+        create: true
+        mode: '0644'
+        line: '{{ item }}'
+      loop:
+        - alias k=kubectl
+        - complete -F __start_kubectl k
+    - name: Setup kubectl completion
+      ansible.builtin.lineinfile:
+        path: '/home/{{ ansible_user }}/.bashrc'
+        line: source <(kubectl completion bash)
