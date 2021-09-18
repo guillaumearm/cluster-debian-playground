@@ -1,0 +1,28 @@
+- name: Download and expose kubernetes images to cacheserver
+  gather_facts: false
+  hosts: cacheserver
+  vars:
+    docker_k8s_registry: k8s.gcr.io
+    docker_private_registry: '{{ docker_registry_hostname }}:{{ docker_registry_port }}'
+    k8s_images:
+      - kube-apiserver:v1.22.2
+      - kube-controller-manager:v1.22.2
+      - kube-scheduler:v1.22.2
+      - kube-proxy:v1.22.2
+      - pause:3.5
+      - etcd:3.5.0-0
+      - coredns/coredns:v1.8.4
+
+  tasks:
+    - name: Pull from k8s image registry
+      community.docker.docker_image:
+        source: pull
+        name: '{{ docker_k8s_registry }}/{{ item }}'
+      loop: '{{ k8s_images }}'
+    - name: Push k8s images to cache resgistry
+      community.docker.docker_image:
+        name: '{{ docker_k8s_registry }}/{{ item }}'
+        repository: '{{ docker_private_registry }}/{{ item }}'
+        push: true
+        source: local
+      loop: '{{ k8s_images }}'

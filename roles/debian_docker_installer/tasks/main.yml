@@ -42,14 +42,14 @@
       - docker-ce-cli
     state: present
     update_cache: true
-    cache_valid_time: 3600
+    cache_valid_time: '{{ 0 if __docker_apt_list_copy.changed else 3600 }}'
 - name: Add docker group to given main_user
   ansible.builtin.user:
     name: '{{ ansible_user }}'
     group: '{{ ansible_user }}'
     groups: docker
     append: true
-- name: Install python dependencies
+- name: Install python packages
   ansible.builtin.apt:
     name:
       - python

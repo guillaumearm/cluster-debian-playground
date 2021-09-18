@@ -17,7 +17,7 @@
     registry_volume_path: '/mnt/registry'
   tasks:
     - name: Start registry container
-      ansible.builtin.docker_container:
+      community.docker.docker_container:
         container_default_behavior: no_defaults
         name: registry
         image: registry:2
