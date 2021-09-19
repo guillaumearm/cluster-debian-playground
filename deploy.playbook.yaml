@@ -1,4 +1,4 @@
-- import_playbook: playbooks/00_set_hostname.yaml
+- import_playbook: playbooks/00_dns.yaml
 - import_playbook: playbooks/01_install_cache_apt.yaml
 - import_playbook: playbooks/02_docker_for_cacheserver.yaml
 - import_playbook: playbooks/03_docker_for_all.yaml

@@ -1,7 +1,7 @@
 - name: PreInstall kubernetes
   gather_facts: false
   become: true
-  hosts: cluster
+  hosts: cluster,!pi
   handlers:
     - name: Reload all sysctl configs
       ansible.builtin.command:
@@ -26,7 +26,7 @@
 - name: Install kubernetes packages
   gather_facts: false
   become: true
-  hosts: cluster
+  hosts: cluster,!pi
   tasks:
     - name: Preliminary packages installation
       ansible.builtin.apt:
@@ -71,7 +71,7 @@
 
 - name: PostInstall kubernetes
   gather_facts: false
-  hosts: cluster
+  hosts: cluster,!pi
   tasks:
     - name: Set aliases kubernetes for bash
       ansible.builtin.lineinfile:

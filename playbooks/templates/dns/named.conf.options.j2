@@ -1,0 +1,55 @@
+// ipv4 only
+
+// acl "localnet" {
+//  192.168.1/24;
+// };
+
+options {
+	directory "/var/cache/bind";
+
+	// If there is a firewall between you and nameservers you want
+	// to talk to, you may need to fix the firewall to allow multiple
+	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+	//========================================================================
+	// If BIND logs error messages about the root key being expired,
+	// you will need to update your keys.  See https://www.isc.org/bind-keys
+	//========================================================================
+
+	forwarders {
+		192.168.1.1;
+	};
+
+	allow-query {
+		any;
+	};
+
+	recursion yes;
+
+	allow-recursion {
+		any;
+	};
+	allow-query-cache {
+		any;
+	};
+
+	version "[SECURED]";
+
+	// allow-notify {
+	// 	any;
+	// };
+
+	allow-transfer {"none";};
+
+	// listen-on    { 127.0.0.1; {{ dns_server_ip }}; };
+
+	listen-on    { any; };
+	listen-on-v6 { any; };
+
+	transfer-source {{ dns_server_ip }};
+	notify-source {{ dns_server_ip }};
+
+	dnssec-enable yes;
+	dnssec-lookaside auto;
+	dnssec-validation auto;
+};

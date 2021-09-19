@@ -1,5 +1,7 @@
 all:
   vars:
+    dns_domain: maison.fr
+    dns_server_ip: 192.168.1.200
     cache_server_ip: 192.168.1.210
     apt_cache_server: "{{ cache_server_ip }}"
     apt_cache_port: 3142
@@ -9,24 +11,36 @@ all:
   children:
     cluster:
       children:
-        controller: # kubernetes controller
+        controller:
           hosts:
             192.168.1.200:
-              hostname: kube-control
-        nodes: # kubernetes nodes
+              dns_root: true
+              dns_proxy: true
+              dns_www: true
+              hostname: trapcodien
+        pi:
+          hosts:
+            # 192.168.1.43:
+            #   hostname: pi4
+            192.168.1.25:
+              hostname: pi3
+        workers:
           hosts:
             192.168.1.201:
-              hostname: kube-node1
+              hostname: node1
             # 192.168.1.202:
-            #   hostname: kube-node2
+            #   hostname: node2
             # 192.168.1.203:
-            #   hostname: kube-node3
+            #   hostname: node3
             # 192.168.1.204:
-            #   hostname: kube-node4
+            #   hostname: node4
     cacheserver: # apt-cache + docker registry
       hosts:
         192.168.1.210:
-          hostname: cache-server
+          hostname: cache
       vars:
         apt_cache_server: 127.0.0.1
         docker_registry_server: 127.0.0.1
+    nameserver:
+      hosts:
+        192.168.1.200:

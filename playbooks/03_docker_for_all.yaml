@@ -13,7 +13,7 @@
 - name: Configure insecure-registries on all docker machines
   gather_facts: false
   become: true
-  hosts: all
+  hosts: cluster
   handlers:
     - name: Restart docker daemon
       ansible.builtin.systemd:

@@ -1,0 +1,55 @@
+- name: Install and setup DNS server
+  gather_facts: false
+  become: true
+  hosts: nameserver
+  handlers:
+    - name: Restart named service
+      ansible.builtin.systemd:
+        name: named
+        enabled: true
+        state: restarted
+
+  tasks:
+    - name: Install DNS server (bind9)
+      ansible.builtin.apt:
+        name: bind9
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+    - name: Setup dns options
+      notify: Restart named service
+      ansible.builtin.template:
+        src: templates/dns/named.conf.options.j2
+        dest: /etc/bind/named.conf.options
+        mode: '0644'
+    - name: Setup dns root configuration
+      notify: Restart named service
+      ansible.builtin.template:
+        src: templates/dns/named.conf.local.j2
+        dest: /etc/bind/named.conf.local
+        mode: '0644'
+    - name: Setup sub-domains
+      notify: Restart named service
+      ansible.builtin.template:
+        src: templates/dns/domain.db.j2
+        dest: /var/cache/bind/{{ dns_domain }}.db
+        mode: '0644'
+
+- name: Set DNS configuration on clients
+  gather_facts: false
+  become: true
+  hosts: all
+  tasks:
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: '{{ hostname }}'
+    - name: Prevent dhcp client to rewrite resolv.conf on all machine
+      ansible.builtin.template:
+        src: templates/dns/leave_my_resolv_conf_alone.j2
+        dest: /etc/dhcp/dhclient-enter-hooks.d/leave_my_resolv_conf_alone
+        mode: '0755'
+    - name: copy resolv.conf file
+      ansible.builtin.template:
+        src: templates/dns/resolv.conf.j2
+        dest: /etc/resolv.conf
+        mode: '0644'
