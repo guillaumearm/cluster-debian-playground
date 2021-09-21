@@ -5,7 +5,7 @@
   handlers:
     - name: Restart named service
       ansible.builtin.systemd:
-        name: named
+        name: bind9
         enabled: true
         state: restarted
 
@@ -52,4 +52,9 @@
       ansible.builtin.template:
         src: templates/dns/resolv.conf.j2
         dest: /etc/resolv.conf
+        mode: '0644'
+    - name: Setup /etc/hosts file
+      ansible.builtin.template:
+        src: templates/all/hosts.j2
+        dest: /etc/hosts
         mode: '0644'

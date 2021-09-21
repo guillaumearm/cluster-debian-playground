@@ -1,7 +1,7 @@
 all:
   vars:
     dns_domain: maison.fr
-    dns_server_ip: 192.168.1.200
+    dns_server_ip: 192.168.1.8
     cache_server_ip: 192.168.1.210
     apt_cache_server: "{{ cache_server_ip }}"
     apt_cache_port: 3142
@@ -14,20 +14,11 @@ all:
         controller:
           hosts:
             192.168.1.200:
-              dns_root: true
-              dns_proxy: true
-              dns_www: true
-              hostname: trapcodien
-        pi:
-          hosts:
-            # 192.168.1.43:
-            #   hostname: pi4
-            192.168.1.25:
-              hostname: pi3
+              hostname: master
         workers:
           hosts:
-            192.168.1.201:
-              hostname: node1
+            # 192.168.1.201:
+            #   hostname: node1
             # 192.168.1.202:
             #   hostname: node2
             # 192.168.1.203:
@@ -41,6 +32,18 @@ all:
       vars:
         apt_cache_server: 127.0.0.1
         docker_registry_server: 127.0.0.1
+    pi:
+      children:
+        nameserver:
+      hosts:
+        # 192.168.1.23:
+        #   hostname: pi3
+        192.168.1.43:
+          hostname: pi4
+          dns_proxy: true
+          dns_root: true
+          dns_www: true
     nameserver:
       hosts:
-        192.168.1.200:
+        192.168.1.8:
+          hostname: ns

@@ -1,6 +1,6 @@
 - import_playbook: playbooks/00_dns.yaml
 - import_playbook: playbooks/01_install_cache_apt.yaml
 - import_playbook: playbooks/02_docker_for_cacheserver.yaml
-- import_playbook: playbooks/03_docker_for_all.yaml
+- import_playbook: playbooks/03_docker_for_cluster.yaml
 - import_playbook: playbooks/04_kubernetes.yaml
 - import_playbook: playbooks/05_cache_kubernetes_docker_images.yaml

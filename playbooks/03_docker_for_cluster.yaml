@@ -32,8 +32,3 @@
           }
         dest: '/etc/docker/daemon.json'
         mode: '0600'
-    - name: Setup /etc/hosts file with registry hostname
-      ansible.builtin.template:
-        src: templates/docker/hosts.j2
-        dest: /etc/hosts
-        mode: '0644'
