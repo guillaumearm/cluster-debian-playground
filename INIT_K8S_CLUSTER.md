@@ -3,7 +3,8 @@
 ### Init k8s cluster
 
 ```bash
-kubeadm init --apiserver-advertise-address=192.168.122.10 --node-name $HOSTNAME --pod-network-cidr=10.244.0.0/16
+kubeadm config images pull
+sudo kubeadm init --apiserver-advertise-address=192.168.122.10 --node-name $HOSTNAME --pod-network-cidr=10.244.0.0/16
 ```
 
 ### Install flannel
