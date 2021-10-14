@@ -2,7 +2,7 @@ all:
   vars:
     dns_domain: maison.fr
     dns_server_ip: 192.168.122.10
-    cache_server_ip: 192.168.2.3
+    cache_server_ip: 192.168.122.3
     apt_cache_server: "{{ cache_server_ip }}"
     apt_cache_port: 3142
     docker_registry_server: "{{ cache_server_ip }}"
