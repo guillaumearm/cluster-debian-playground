@@ -11,14 +11,14 @@ all:
   children:
     cluster:
       children:
-        controller:
-          hosts:
-            192.168.1.200:
-              hostname: master
+      #   controller:
+      #     hosts:
+      #       192.168.1.200:
+      #         hostname: master
         workers:
           hosts:
-            # 192.168.1.201:
-            #   hostname: node1
+            192.168.1.151:
+              hostname: playground
             # 192.168.1.202:
             #   hostname: node2
             # 192.168.1.203:
@@ -32,18 +32,18 @@ all:
       vars:
         apt_cache_server: 127.0.0.1
         docker_registry_server: 127.0.0.1
-    pi:
-      children:
-        nameserver:
-      hosts:
+    # pi:
+    #   children:
+    #     nameserver:
+      # hosts:
         # 192.168.1.23:
         #   hostname: pi3
-        192.168.1.43:
-          hostname: pi4
-          dns_proxy: true
-          dns_root: true
-          dns_www: true
-    nameserver:
-      hosts:
-        192.168.1.8:
-          hostname: ns
+    #     192.168.1.43:
+    #       hostname: pi4
+    #       dns_proxy: true
+    #       dns_root: true
+    #       dns_www: true
+    # nameserver:
+    #   hosts:
+        #192.168.1.8:
+        #hostname: ns
